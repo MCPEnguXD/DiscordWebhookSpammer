@@ -1,4 +1,5 @@
 import tkinter as tk
+import tkinter.messagebox  # For displaying error messages
 import requests
 import json
 
@@ -17,9 +18,16 @@ def send_message_to_discord_webhook(webhook_url, message, num_times):
             print("Message sent successfully!")
 
 def send_message():
-    webhook_url = url_entry.get()
+    webhook_url = url_entry.get().strip()
+    if not webhook_url or not webhook_url.startswith("http"):
+        tk.messagebox.showerror("Invalid URL", "Please enter a valid webhook URL.")
+        return
     message = message_entry.get()
-    num_times = int(num_entry.get())
+    try:
+        num_times = int(num_entry.get())
+    except ValueError:
+        tk.messagebox.showerror("Invalid Number", "Please enter a valid integer for number of times.")
+        return
     send_message_to_discord_webhook(webhook_url, message, num_times)
 
 # Create the main window
